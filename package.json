@@ -21,9 +21,9 @@
     "lint": "eslint src --fix",
     "test": "jest",
     "prepublish:npm": "yarn build",
-    "publish:npm": "yarn publish --access public",
+    "publish:npm": "npm publish --access public",
     "prepublish:next": "yarn build",
-    "publish:next": "yarn publish --access public --tag next",
+    "publish:next": "npm publish --access public --tag next",
     "prerelease": "yarn build",
     "release": "release-it"
   },
