@@ -25,7 +25,8 @@
     "prepublish:next": "yarn build",
     "publish:next": "npm publish --access public --tag next",
     "prerelease": "yarn build",
-    "release": "release-it"
+    "release": "release-it",
+    "commit": "cz"
   },
   "husky": {
     "hooks": {
