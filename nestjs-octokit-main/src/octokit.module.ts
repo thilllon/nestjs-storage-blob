@@ -1,11 +1,7 @@
 import { DynamicModule, Module, Provider, Scope } from '@nestjs/common';
 import { Octokit } from 'octokit';
 import { OCTOKIT, OCTOKIT_OPTIONS } from './octokit.constants';
-import {
-  ModuleAsyncOptions,
-  ModuleOptions,
-  OptionsFactory,
-} from './octokit.interface';
+import { ModuleAsyncOptions, ModuleOptions, OptionsFactory } from './octokit.interface';
 import { OctokitService } from './octokit.service';
 
 @Module({
@@ -42,9 +38,7 @@ export class OctokitModule {
     };
   }
 
-  private static createAsyncProviders(
-    optionsAsync: ModuleAsyncOptions
-  ): Provider[] {
+  private static createAsyncProviders(optionsAsync: ModuleAsyncOptions): Provider[] {
     if (optionsAsync.useExisting || optionsAsync.useFactory) {
       return [this.createAsyncOptionsProvider(optionsAsync)];
     }
@@ -57,13 +51,9 @@ export class OctokitModule {
         },
       ];
     }
-    throw Error(
-      'One of useClass, useFactory or useExisting should be provided'
-    );
+    throw Error('One of useClass, useFactory or useExisting should be provided');
   }
-  private static createAsyncOptionsProvider(
-    options: ModuleAsyncOptions
-  ): Provider {
+  private static createAsyncOptionsProvider(options: ModuleAsyncOptions): Provider {
     if (options.useFactory) {
       return {
         provide: OCTOKIT_OPTIONS,
@@ -74,8 +64,7 @@ export class OctokitModule {
 
     const provider: Provider = {
       provide: OCTOKIT_OPTIONS,
-      useFactory: async (optionsFactory: OptionsFactory) =>
-        await optionsFactory.createOptions(),
+      useFactory: async (optionsFactory: OptionsFactory) => await optionsFactory.createOptions(),
     };
     if (options.useExisting) provider.inject = [options.useExisting];
     if (options.useClass) provider.inject = [options.useClass];

@@ -18,9 +18,7 @@ export interface ModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   isGlobal?: boolean;
   useExisting?: Type<OptionsFactory>;
   useClass?: Type<OptionsFactory>;
-  useFactory?: (
-    ...args: any[]
-  ) => Promise<_PartialModuleOptions> | _PartialModuleOptions;
+  useFactory?: (...args: any[]) => Promise<_PartialModuleOptions> | _PartialModuleOptions;
   inject?: any[];
   scope?: Scope;
 }
