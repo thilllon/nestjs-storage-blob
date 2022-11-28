@@ -6,17 +6,17 @@ import {
   ModuleOptions,
   OptionsFactory,
 } from './blob.interface';
-import { BlobService } from './blob.service';
+import { BlobStorageService } from './blob.service';
 
 @Module({
-  providers: [BlobService],
-  exports: [BlobService],
+  providers: [BlobStorageService],
+  exports: [BlobStorageService],
 })
-export class OctokitModule {
+export class BlobStorageModule {
   public static forRoot(options: ModuleOptions): DynamicModule {
     return {
       global: options.isGlobal || false,
-      module: OctokitModule,
+      module: BlobStorageModule,
       providers: [
         {
           provide: BLOB_STORAGE_CLIENT,
@@ -28,7 +28,7 @@ export class OctokitModule {
   }
 
   public static forRootAsync(options: ModuleAsyncOptions): DynamicModule {
-    const OctokitProvider: Provider = {
+    const provider: Provider = {
       useFactory: (options: ModuleOptions) => this.instantiate(options),
       provide: BLOB_STORAGE_CLIENT,
       scope: options.scope || Scope.DEFAULT,
@@ -37,8 +37,8 @@ export class OctokitModule {
     return {
       global: options.isGlobal,
       imports: options.imports || [],
-      module: OctokitModule,
-      providers: [...this.createAsyncProviders(options), OctokitProvider],
+      module: BlobStorageModule,
+      providers: [...this.createAsyncProviders(options), provider],
     };
   }
 

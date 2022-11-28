@@ -11,7 +11,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { BLOB_STORAGE_CLIENT } from './blob.constants';
 
 @Injectable()
-export class BlobService {
+export class BlobStorageService {
   constructor(
     @Inject(BLOB_STORAGE_CLIENT)
     private readonly blobServiceClient: BlobServiceClient,

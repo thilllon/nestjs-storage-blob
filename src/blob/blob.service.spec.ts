@@ -2,17 +2,17 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import { Test } from '@nestjs/testing';
 import * as dotenv from 'dotenv';
 import { BLOB_STORAGE_CLIENT } from './blob.constants';
-import { BlobService } from './blob.service';
+import { BlobStorageService } from './blob.service';
 
 dotenv.config();
 
-describe('OctokitService', () => {
-  let service: BlobService;
+describe('BlobStorageService', () => {
+  let service: BlobStorageService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        BlobService,
+        BlobStorageService,
         {
           provide: BLOB_STORAGE_CLIENT,
           useValue: new BlobServiceClient(
@@ -23,7 +23,7 @@ describe('OctokitService', () => {
       ],
     }).compile();
 
-    service = module.get(BlobService);
+    service = module.get(BlobStorageService);
   });
 
   it('should be defined', () => {
