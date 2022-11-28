@@ -27,5 +27,5 @@ yarn add link:./../nestjs-blob-storage
 
 ```sh
 # 2FA error occurs when using yarn
-npm run publish
+npm run release
 ```
