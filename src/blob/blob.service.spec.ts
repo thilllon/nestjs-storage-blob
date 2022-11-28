@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import { BLOB_STORAGE_CLIENT } from './blob.constants';
 import { BlobStorageService } from './blob.service';
 
-dotenv.config();
+dotenv.config({ path: '.env.test' });
 
 describe('BlobStorageService', () => {
   let service: BlobStorageService;
@@ -15,10 +15,9 @@ describe('BlobStorageService', () => {
         BlobStorageService,
         {
           provide: BLOB_STORAGE_CLIENT,
-          useValue: new BlobServiceClient(
-            'https://<MY_ACCOUNT>.blob.core.windows.net?<SAS_STRING>',
+          useValue: BlobServiceClient.fromConnectionString(
+            process.env.AZURE_CONNECTION,
           ),
-          // useValue: BlobServiceClient.fromConnectionString(''),
         },
       ],
     }).compile();
@@ -30,11 +29,7 @@ describe('BlobStorageService', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should be able to interact with the Octokit instance', async () => {
-  //   const response = await service.rest.search.repos({
-  //     q: 'nestjs',
-  //     per_page: 1,
-  //   });
-  //   expect(response.data).toBeDefined();
-  // });
+  it('should return', () => {
+    expect(service.getAccountSasUrl()).toBeTruthy();
+  });
 });

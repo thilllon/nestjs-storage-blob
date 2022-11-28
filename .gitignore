@@ -33,3 +33,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .npmrc
+
+.env*
+!.env.example

@@ -1,14 +1,24 @@
 import {
   AccountSASPermissions,
+  AccountSASPermissionsLike,
+  AccountSASResourceTypes,
   BlobGenerateSasUrlOptions,
   BlobSASPermissions,
+  BlobSASPermissionsLike,
   BlobServiceClient,
   ContainerGenerateSasUrlOptions,
   ContainerSASPermissions,
+  ContainerSASPermissionsLike,
   ServiceGenerateAccountSasUrlOptions,
 } from '@azure/storage-blob';
 import { Inject, Injectable } from '@nestjs/common';
 import { BLOB_STORAGE_CLIENT } from './blob.constants';
+
+// https://github.com/Azure-Samples/functions-dotnet-sas-token/blob/master/README.md
+// https://docs.microsoft.com/ko-kr/azure/storage/blobs/quickstart-blobs-javascript-browser
+// https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview
+// https://dmrelease.blob.core.windows.net/azurestoragejssample/samples/sample-blob.html
+// https://github.com/Azure-Samples/functions-node-sas-token/blob/master/GetSasToken-Node/index.js#L18
 
 @Injectable()
 export class BlobStorageService {
@@ -21,26 +31,41 @@ export class BlobStorageService {
     return this.blobServiceClient.getContainerClient(containerName);
   }
 
+  convertToResourceTypes(
+    resourceTypeMap: Omit<AccountSASResourceTypes, 'toString'> = {
+      container: true,
+      object: true,
+      service: true,
+    },
+  ) {
+    const resType = new AccountSASResourceTypes();
+    if (resourceTypeMap.container) {
+      resType.container = true;
+    }
+    if (resourceTypeMap.object) {
+      resType.object = true;
+    }
+    if (resourceTypeMap.service) {
+      resType.service = true;
+    }
+    return resType.toString();
+  }
+
   getAccountSasUrl(
     expiresOn = new Date(Date.now() + 5 * 60 * 1000),
-    permissionsString = 'r',
-    resourceTypes = 'container',
+    permissions: AccountSASPermissionsLike = { read: true },
+    resourceTypeMap: Omit<AccountSASResourceTypes, 'toString'> = {
+      container: true,
+      object: true,
+      service: true,
+    },
     options?: ServiceGenerateAccountSasUrlOptions,
   ) {
-    // https://github.com/Azure-Samples/functions-dotnet-sas-token/blob/master/README.md
-    // https://docs.microsoft.com/ko-kr/azure/storage/blobs/quickstart-blobs-javascript-browser
-    // https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview
-    // https://dmrelease.blob.core.windows.net/azurestoragejssample/samples/sample-blob.html
-    // https://github.com/Azure-Samples/functions-node-sas-token/blob/master/GetSasToken-Node/index.js#L18
-
-    const permissions = this.convertToPermissions(
-      new AccountSASPermissions(),
-      permissionsString,
-    );
-
+    const __permissions = AccountSASPermissions.from(permissions);
+    const resourceTypes = this.convertToResourceTypes(resourceTypeMap);
     const accountSasUrl = this.blobServiceClient.generateAccountSasUrl(
       expiresOn,
-      permissions,
+      __permissions,
       resourceTypes,
       options,
     );
@@ -51,16 +76,12 @@ export class BlobStorageService {
   async getContainerSasUrl(
     containerName: string,
     options?: Omit<ContainerGenerateSasUrlOptions, 'permissions'>,
-    permissionsString = 'rwac',
+    permissions: ContainerSASPermissionsLike = { read: true },
   ) {
-    const permissions = this.convertToPermissions(
-      new ContainerSASPermissions(),
-      permissionsString,
-    );
-
+    const __permissions = ContainerSASPermissions.from(permissions);
     const sasUrl = await this.getContainerClient(containerName).generateSasUrl({
       ...options,
-      permissions,
+      permissions: __permissions,
     });
 
     return sasUrl;
@@ -69,83 +90,26 @@ export class BlobStorageService {
   async getBlockBlobSasUrl(
     containerName: string,
     blobName: string,
-    permissionsString = 'r',
+    permissions: BlobSASPermissionsLike = { read: true },
     options?: Omit<BlobGenerateSasUrlOptions, 'permissions'>,
   ) {
-    const permissions = this.convertToPermissions(
-      new BlobSASPermissions(),
-      permissionsString,
-    );
-
+    const __permissions = BlobSASPermissions.from(permissions);
     const sasUrl = await this.getContainerClient(containerName)
       .getBlockBlobClient(blobName)
       .generateSasUrl({
         ...options,
-        permissions,
+        permissions: __permissions,
       });
 
+    // how to use this sasURl?
+    // PUT {{sasUrl}} with header 'x-ms-blob-type: BlockBlob'
+    // header setting is mendatory
+    // and attach file to body
+
+    // how to revoke sasUrl after upload?
+    // https://stackoverflow.com/questions/26206993/how-to-revoke-shared-access-signature-in-azure-sdk
+    // https://www.youtube.com/watch?v=lFFYcNbDvdo
+
     return sasUrl;
-  }
-
-  private convertToPermissions<
-    T extends
-      | AccountSASPermissions
-      | ContainerSASPermissions
-      | BlobSASPermissions,
-  >(perm: T, permissions: string): T {
-    if (permissions.includes('a')) {
-      perm.add = true;
-    }
-    if (permissions.includes('c')) {
-      perm.create = true;
-    }
-    if (permissions.includes('d')) {
-      perm.delete = true;
-    }
-    if (permissions.includes('v')) {
-      perm.deleteVersion = true;
-    }
-    if (permissions.includes('p')) {
-      perm.permanentDelete = true;
-    }
-    if (permissions.includes('r')) {
-      perm.read = true;
-    }
-    if (permissions.includes('w')) {
-      perm.write = true;
-    }
-
-    if (perm instanceof AccountSASPermissions) {
-      if (permissions.includes('l')) {
-        perm.list = true;
-      }
-
-      if (permissions.includes('u')) {
-        perm.update = true;
-      }
-    }
-
-    if (perm instanceof ContainerSASPermissions) {
-      if (permissions.includes('e')) {
-        perm.execute = true;
-      }
-      if (permissions.includes('m')) {
-        perm.move = true;
-      }
-      if (permissions.includes('l')) {
-        perm.list = true;
-      }
-    }
-
-    if (perm instanceof BlobSASPermissions) {
-      if (permissions.includes('e')) {
-        perm.execute = true;
-      }
-      if (permissions.includes('m')) {
-        perm.move = true;
-      }
-    }
-
-    return perm;
   }
 }
