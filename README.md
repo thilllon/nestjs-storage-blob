@@ -1,18 +1,25 @@
-# why?
+# nestjs-blob-storage
 
-- nestjs with [@azure/storage-blob](https://www.npmjs.com/package/@azure/storage-blob)
+Azure Blob Storage module for Nest.js
 
-- [@nestjs/azure-storage](https://www.npmjs.com/package/@nestjs/azure-storage) does not provide the method to upload using presigned url
+# Why?
 
-# how?
+- Nest.js with [@azure/storage-blob](https://www.npmjs.com/package/@azure/storage-blob)
 
-## setup
+- [@nestjs/azure-storage](https://www.npmjs.com/package/@nestjs/azure-storage)
+  - does not provide the method to upload a file using presigned url
+  - does not provide multiple authentication methods
+  - does not provide method to upload files directly to Azure without passing through my server
+
+# How?
+
+## Setup
 
 ```sh
 yarn add nestjs-blob-storage @azure/storage-blob
 ```
 
-### options #1
+### Options #1
 
 ```ts
 // app.module.ts
@@ -35,7 +42,7 @@ import { AppService } from './app.service';
 export class AppModule {}
 ```
 
-### option #2
+### Option #2
 
 ```ts
 // app.module.ts
@@ -60,7 +67,7 @@ import { AppService } from './app.service';
 export class AppModule {}
 ```
 
-## usage
+## Usage
 
 ```ts
 // app.controller.ts
@@ -97,20 +104,30 @@ export class AppController {
 ```
 
 ```ts
-const formData = new FormData();
-formData.append('file', file); // file to upload
+// For example, let's assume that we are in the browser-side.
 
-axios.put(blobSasUrl, {}).then((res) => {
-  //
+// Get blob SAS URL which will be endpoint of uploading file
+const res = await axios.get('https://example.com/block-blob-sas');
+const sasUrl = res.data.blobSasUrl;
+
+// Upload a file directly to Azure Blob Storage which reduces the load on the server
+// Make a `FormData` instance and set the file data to upload
+const formData = new FormData();
+formData.append('file', file);
+
+// Don't forget to set header
+const uploadResponse = await axios.put(blobSasUrl, formData, {
+  header: { 'x-ms-blob-type': 'BlockBlob' },
 });
+console.log(uploadReponse.status); // 201 Created
 ```
 
-# roadmap
+# Roadmap
 
 - [ ] add test code
-- [ ] add other authentication method (https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/storage/storage-blob/samples/v12/typescript)
+- [ ] add other authentication method [link](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/storage/storage-blob/samples/v12/typescript)
 
-# reference
+# Reference
 
 - https://www.youtube.com/watch?v=hIAKzDz09tc
 
@@ -130,23 +147,23 @@ axios.put(blobSasUrl, {}).then((res) => {
 
 - https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/storage/storage-blob/samples/v12/typescript
 
-# contribution
+# Contribution
 
-## install
+## Install
 
 ```sh
 # to test locally
 yarn add link:./path/to/nestjs-blob-storage
 ```
 
-## publish
+## Publish
 
 ```sh
 # DO NOT USE YARN: 2FA error occurs when using yarn
 npm run release
 ```
 
-## test
+## Test
 
 ```sh
 # set environment variable at ".env.test"
