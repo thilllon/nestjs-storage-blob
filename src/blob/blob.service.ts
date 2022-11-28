@@ -94,15 +94,6 @@ export class BlobStorageService {
     },
     options: Omit<BlobGenerateSasUrlOptions, 'permissions'> = {},
   ) {
-    const __permissions = BlobSASPermissions.from(permissions);
-    const sasUrl = await this.blobServiceClient
-      .getContainerClient(containerName)
-      .getBlockBlobClient(blobName)
-      .generateSasUrl({
-        ...options,
-        permissions: __permissions,
-      });
-
     // how to use this sasURl?
     // PUT {{sasUrl}} with header 'x-ms-blob-type: BlockBlob'
     // header setting is mendatory
@@ -111,6 +102,15 @@ export class BlobStorageService {
     // how to revoke sasUrl after upload?
     // https://stackoverflow.com/questions/26206993/how-to-revoke-shared-access-signature-in-azure-sdk
     // https://www.youtube.com/watch?v=lFFYcNbDvdo
+
+    const __permissions = BlobSASPermissions.from(permissions);
+    const sasUrl = await this.blobServiceClient
+      .getContainerClient(containerName)
+      .getBlockBlobClient(blobName)
+      .generateSasUrl({
+        ...options,
+        permissions: __permissions,
+      });
 
     return sasUrl;
   }
