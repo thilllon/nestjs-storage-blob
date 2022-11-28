@@ -31,6 +31,7 @@
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
     }
   },
@@ -41,6 +42,8 @@
   },
   "devDependencies": {
     "@azure/storage-blob": "^12.12.0",
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
     "@nestjs/common": "^9.2.0",
     "@nestjs/core": "^9.2.0",
     "@nestjs/testing": "^9.2.0",
