@@ -1,7 +1,7 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 import { Test } from '@nestjs/testing';
 import * as dotenv from 'dotenv';
-import { BLOB_STORAGE_CLIENT } from './blob.constants';
+import { BLOB_STORAGE_CLIENT, CONNECTION_VARIABLE } from './blob.constants';
 import { BlobStorageService } from './blob.service';
 
 dotenv.config({ path: '.env.test' });
@@ -16,7 +16,7 @@ describe('BlobStorageService', () => {
         {
           provide: BLOB_STORAGE_CLIENT,
           useValue: BlobServiceClient.fromConnectionString(
-            process.env.AZURE_CONNECTION,
+            process.env[CONNECTION_VARIABLE],
           ),
         },
       ],

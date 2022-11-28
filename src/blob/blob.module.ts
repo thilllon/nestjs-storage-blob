@@ -1,6 +1,10 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 import { DynamicModule, Module, Provider, Scope } from '@nestjs/common';
-import { BLOB_STORAGE_CLIENT, BLOB_STORAGE_OPTIONS } from './blob.constants';
+import {
+  BLOB_STORAGE_CLIENT,
+  BLOB_STORAGE_OPTIONS,
+  CONNECTION_VARIABLE,
+} from './blob.constants';
 import {
   ModuleAsyncOptions,
   ModuleOptions,
@@ -88,6 +92,12 @@ export class BlobStorageModule {
   }
 
   private static instantiate(options: ModuleOptions): BlobServiceClient {
+    if (!options.connection) {
+      throw new Error(
+        `Environment variable is required: "${CONNECTION_VARIABLE}"`,
+      );
+    }
+
     return BlobServiceClient.fromConnectionString(
       options.connection,
       options.storageOptions,
