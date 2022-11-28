@@ -1,13 +1,35 @@
 {
   "name": "nestjs-blob-storage",
   "version": "0.0.5",
-  "description": "Nest - modern, fast, powerful node.js web framework (@s3)",
+  "description": "",
   "author": "thilllon",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thilllon/nestjs-blob-storage.git"
+  },
+  "contributors": [
+    {
+      "name": "thilllon",
+      "email": "thilllon970@gmail.com"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/thilllon/nestjs-blob-storage/issues"
+  },
   "keywords": [
     "nest",
     "nestjs",
-    "storage"
+    "storage",
+    "sas",
+    "blobSAS",
+    "containerSAS",
+    "accountSAS",
+    "azure",
+    "presigned url",
+    "uplaod",
+    "@azure/storage-blob",
+    "@nest/azure-storage"
   ],
   "files": [
     "dist"
@@ -15,15 +37,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "fix": "rm -rf node_modules yarn.lock && yarn install",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "format": "prettier --write --list-different \"**/*.(ts|json|js)\"",
+    "format": "prettier --write --list-different \"**/*.(ts|js|json|md)\"",
     "lint": "eslint src --fix",
     "test": "jest",
-    "prepublish:npm": "yarn build",
-    "publish:npm": "npm publish --access public",
-    "prepublish:next": "yarn build",
-    "publish:next": "npm publish --access public --tag next",
     "prerelease": "yarn build",
     "release": "release-it",
     "commit": "cz",
@@ -62,7 +79,6 @@
     "husky": "^8.0.0",
     "jest": "^29.3.1",
     "lint-staged": "^13.0.4",
-    "minio": "^7.0.32",
     "prettier": "^2.8.0",
     "reflect-metadata": "^0.1.13",
     "release-it": "^15.5.0",
@@ -72,7 +88,6 @@
     "ts-loader": "^9.4.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
-    "tsup": "^6.5.0",
     "typescript": "^4.9.3"
   }
 }
