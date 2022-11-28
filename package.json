@@ -44,7 +44,8 @@
     "prerelease": "yarn build",
     "release": "release-it",
     "commit": "cz",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "ez": "git add . && yarn cz"
   },
   "husky": {
     "hooks": {

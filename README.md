@@ -21,12 +21,11 @@ import { Module } from '@nestjs/common';
 import { BlobStorageModule } from 'nestjs-blob-storage';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CONNECTION_VARIABLE } from './blob.constants';
 
 @Module({
   imports: [
     BlobStorageModule.forRoot({
-      connection: process.env[CONNECTION_VARIABLE],
+      connection: process.env.NEST_AZURE_STORAGE_BLOB_CONNECTION,
       isGlobal: true, // optional
     }),
   ],
@@ -45,13 +44,12 @@ import { Module } from '@nestjs/common';
 import { BlobStorageModule } from 'nestjs-blob-storage';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CONNECTION_VARIABLE } from './blob.constants';
 
 @Module({
   imports: [
     BlobStorageModule.forRootAsync({
       useFactory: () => ({
-        connection: process.env[CONNECTION_VARIABLE],
+        connection: process.env.NEST_AZURE_STORAGE_BLOB_CONNECTION,
       }),
       isGlobal: true, // optional
     }),
