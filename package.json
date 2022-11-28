@@ -58,6 +58,15 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "release-it": {
+    "git": {
+      "push": true,
+      "commitMessage": "chore: release v${version}"
+    },
+    "github": {
+      "release": true
+    }
+  },
   "devDependencies": {
     "@azure/storage-blob": "^12.12.0",
     "@commitlint/cli": "^17.3.0",
