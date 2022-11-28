@@ -3,6 +3,7 @@ import {
   AccountSASPermissionsLike,
   AccountSASResourceTypes,
   BlobGenerateSasUrlOptions,
+  BlobItem,
   BlobSASPermissions,
   BlobSASPermissionsLike,
   BlobServiceClient,
@@ -14,12 +15,6 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { BLOB_STORAGE_CLIENT } from './blob.constants';
 
-// https://github.com/Azure-Samples/functions-dotnet-sas-token/blob/master/README.md
-// https://docs.microsoft.com/ko-kr/azure/storage/blobs/quickstart-blobs-javascript-browser
-// https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview
-// https://dmrelease.blob.core.windows.net/azurestoragejssample/samples/sample-blob.html
-// https://github.com/Azure-Samples/functions-node-sas-token/blob/master/GetSasToken-Node/index.js#L18
-
 @Injectable()
 export class BlobStorageService {
   constructor(
@@ -27,8 +22,8 @@ export class BlobStorageService {
     private readonly blobServiceClient: BlobServiceClient,
   ) {}
 
-  private getContainerClient(containerName: string) {
-    return this.blobServiceClient.getContainerClient(containerName);
+  getClient() {
+    return this.blobServiceClient;
   }
 
   convertToResourceTypes(
@@ -75,14 +70,18 @@ export class BlobStorageService {
 
   async getContainerSasUrl(
     containerName: string,
-    options?: Omit<ContainerGenerateSasUrlOptions, 'permissions'>,
-    permissions: ContainerSASPermissionsLike = { read: true },
+    permissions: ContainerSASPermissionsLike = {
+      read: true,
+    },
+    options: Omit<ContainerGenerateSasUrlOptions, 'permissions'> = {},
   ) {
     const __permissions = ContainerSASPermissions.from(permissions);
-    const sasUrl = await this.getContainerClient(containerName).generateSasUrl({
-      ...options,
-      permissions: __permissions,
-    });
+    const sasUrl = await this.blobServiceClient
+      .getContainerClient(containerName)
+      .generateSasUrl({
+        ...options,
+        permissions: __permissions,
+      });
 
     return sasUrl;
   }
@@ -90,11 +89,14 @@ export class BlobStorageService {
   async getBlockBlobSasUrl(
     containerName: string,
     blobName: string,
-    permissions: BlobSASPermissionsLike = { read: true },
-    options?: Omit<BlobGenerateSasUrlOptions, 'permissions'>,
+    permissions: BlobSASPermissionsLike = {
+      read: true,
+    },
+    options: Omit<BlobGenerateSasUrlOptions, 'permissions'> = {},
   ) {
     const __permissions = BlobSASPermissions.from(permissions);
-    const sasUrl = await this.getContainerClient(containerName)
+    const sasUrl = await this.blobServiceClient
+      .getContainerClient(containerName)
       .getBlockBlobClient(blobName)
       .generateSasUrl({
         ...options,
@@ -111,5 +113,36 @@ export class BlobStorageService {
     // https://www.youtube.com/watch?v=lFFYcNbDvdo
 
     return sasUrl;
+  }
+
+  async listFiles(destination: string, containerName?: string) {
+    const container = this.blobServiceClient.getContainerClient(containerName);
+    const files = container.listBlobsFlat({ prefix: destination });
+    const paths: BlobItem[] = [];
+    for await (const file of files) {
+      paths.push(file);
+    }
+    return paths;
+  }
+
+  async deleteFile(container: string, blob: string) {
+    return this.blobServiceClient
+      .getContainerClient(container)
+      .getBlockBlobClient(blob)
+      .delete();
+  }
+
+  async deleteFileIfExists(container: string, blob: string) {
+    return this.blobServiceClient
+      .getContainerClient(container)
+      .getBlockBlobClient(blob)
+      .deleteIfExists();
+  }
+
+  async downloadStream(container: string, blob: string) {
+    return this.blobServiceClient
+      .getContainerClient(container)
+      .getBlockBlobClient(blob)
+      .download();
   }
 }
