@@ -19,6 +19,16 @@ Azure Blob Storage module for Nest.js
 yarn add nestjs-storage-blob @azure/storage-blob
 ```
 
+```sh
+# Environment variables
+
+# required
+NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUNT_NAME>;AccountKey=<ACCOUNT_KEY>;EndpointSuffix=core.windows.net"
+
+# optional
+NEST_STORAGE_BLOB_CONTAINER="<CONTAINER_NAME>"
+```
+
 ### Options #1
 
 ```ts
@@ -104,22 +114,61 @@ export class AppController {
 ```
 
 ```ts
-// For example, let's assume that we are in the browser-side.
+// Server-side example
 
-// Get blob SAS URL which will be endpoint of uploading file
-const res = await axios.get('https://example.com/block-blob-sas');
-const sasUrl = res.data.blobSasUrl;
+// Get Blob SAS URL which will be endpoint of uploading file
+const res = await axios.get('https://<YOUR_SERVER>/block-blob-sas');
+const blobSasUrl = res.data.blobSasUrl;
 
 // Upload a file directly to Azure Blob Storage which reduces the load on the server
-// Make a `FormData` instance and set the file data to upload
-const formData = new FormData();
-formData.append('file', file);
+const buffer = fs.readFileSync(path.join(process.cwd(), 'myimage.jpg'));
 
-// Don't forget to set header
-const uploadResponse = await axios.put(blobSasUrl, formData, {
-  headers: { 'x-ms-blob-type': 'BlockBlob' },
-});
-console.log(uploadResponse.status); // 201 Created
+if (buffer) {
+  await axios
+    // Do not use `FormData`
+    .put(blobSasUrl, buffer, {
+      headers: {
+        // Do not forget to set headers
+        'x-ms-blob-type': 'BlockBlob',
+      },
+    })
+    .then((res) => {
+      // 201 Created
+      console.log(res.status);
+    })
+    .catch((err: any) => {
+      console.error(err.message);
+    });
+}
+```
+
+```ts
+// Browser-side example
+// Assume that we are using file uploader
+
+const onChange: ChangeEventHandler = async (ev) => {
+  const file = ev.file;
+
+  // Get Blob SAS URL which will be endpoint of uploading file
+  const res = await axios.get('https://<YOUR_SERVER>/block-blob-sas');
+  const blobSasUrl = res.data.blobSasUrl;
+
+  axios
+    // Do not use `FormData`
+    .put(blobSasUrl, file, {
+      headers: {
+        // Do not forget to set headers
+        'x-ms-blob-type': 'BlockBlob',
+      },
+    })
+    .then((res) => {
+      // 201 Created
+      console.log(res.status);
+    })
+    .catch((err: any) => {
+      console.error(err.message);
+    });
+};
 ```
 
 # Roadmap
@@ -166,6 +215,7 @@ npm run release
 ## Test
 
 ```sh
-# set environment variable at ".env.test"
+# set environment variable at `./example/.env.test`
 NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUNT_NAME>;AccountKey=<ACCOUNT_KEY>;EndpointSuffix=core.windows.net"
+NEST_STORAGE_BLOB_CONTAINER="<CONTAINER_NAME>"
 ```
