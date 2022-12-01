@@ -47,6 +47,15 @@
     "prepare": "husky install",
     "ez": "git add . && yarn cz"
   },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "./src/**/*.ts": [
+      "prettier -w -l"
+    ]
+  },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
