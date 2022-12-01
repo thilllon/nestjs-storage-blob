@@ -76,6 +76,10 @@
       "release": true
     }
   },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
   "dependencies": {},
   "devDependencies": {
     "@azure/storage-blob": "^12.12.0",
