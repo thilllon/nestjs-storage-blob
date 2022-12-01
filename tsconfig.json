@@ -9,6 +9,7 @@
     "sourceMap": false,
     "outDir": "./dist",
     "baseUrl": "./",
+    "strict": true,
     "skipLibCheck": true
   },
   "include": ["src/**/*", "test/**/*"],

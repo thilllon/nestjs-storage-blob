@@ -1,4 +1,4 @@
-import * as blob from './blob/index';
+import * as blob from './storage-blob/index';
 
 describe('Index', () => {
   test('should return 4 exports', () => {

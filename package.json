@@ -1,12 +1,12 @@
 {
-  "name": "nestjs-blob-storage",
-  "version": "0.0.9",
+  "name": "nestjs-storage-blob",
+  "version": "0.0.1",
   "description": "",
   "author": "thilllon",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thilllon/nestjs-blob-storage.git"
+    "url": "https://github.com/thilllon/nestjs-storage-blob.git"
   },
   "contributors": [
     {
@@ -15,7 +15,7 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/thilllon/nestjs-blob-storage/issues"
+    "url": "https://github.com/thilllon/nestjs-storage-blob/issues"
   },
   "keywords": [
     "nest",
@@ -38,7 +38,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "format": "prettier --write --list-different \"**/*.(ts|js|json|md)\"",
+    "format": "prettier -w -l .",
     "lint": "eslint src --fix",
     "test": "jest",
     "prerelease": "yarn build",
@@ -67,6 +67,7 @@
       "release": true
     }
   },
+  "dependencies": {},
   "devDependencies": {
     "@azure/storage-blob": "^12.12.0",
     "@commitlint/cli": "^17.3.0",

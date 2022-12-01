@@ -1,4 +1,4 @@
-# nestjs-blob-storage
+# nestjs-storage-blob
 
 Azure Blob Storage module for Nest.js
 
@@ -16,7 +16,7 @@ Azure Blob Storage module for Nest.js
 ## Setup
 
 ```sh
-yarn add nestjs-blob-storage @azure/storage-blob
+yarn add nestjs-storage-blob @azure/storage-blob
 ```
 
 ### Options #1
@@ -25,14 +25,14 @@ yarn add nestjs-blob-storage @azure/storage-blob
 // app.module.ts
 
 import { Module } from '@nestjs/common';
-import { BlobStorageModule } from 'nestjs-blob-storage';
+import { BlobStorageModule } from 'nestjs-storage-blob';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
     BlobStorageModule.forRoot({
-      connection: process.env.NEST_AZURE_STORAGE_BLOB_CONNECTION,
+      connection: process.env.NEST_STORAGE_BLOB_CONNECTION,
       isGlobal: true, // optional
     }),
   ],
@@ -48,7 +48,7 @@ export class AppModule {}
 // app.module.ts
 
 import { Module } from '@nestjs/common';
-import { BlobStorageModule } from 'nestjs-blob-storage';
+import { BlobStorageModule } from 'nestjs-storage-blob';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -56,7 +56,7 @@ import { AppService } from './app.service';
   imports: [
     BlobStorageModule.forRootAsync({
       useFactory: () => ({
-        connection: process.env.NEST_AZURE_STORAGE_BLOB_CONNECTION,
+        connection: process.env.NEST_STORAGE_BLOB_CONNECTION,
       }),
       isGlobal: true, // optional
     }),
@@ -73,7 +73,7 @@ export class AppModule {}
 // app.controller.ts
 
 import { Controller, Get } from '@nestjs/common';
-import { BlobStorageService } from 'nestjs-blob-storage';
+import { BlobStorageService } from 'nestjs-storage-blob';
 
 @Controller()
 export class AppController {
@@ -117,9 +117,9 @@ formData.append('file', file);
 
 // Don't forget to set header
 const uploadResponse = await axios.put(blobSasUrl, formData, {
-  header: { 'x-ms-blob-type': 'BlockBlob' },
+  headers: { 'x-ms-blob-type': 'BlockBlob' },
 });
-console.log(uploadReponse.status); // 201 Created
+console.log(uploadResponse.status); // 201 Created
 ```
 
 # Roadmap
@@ -131,7 +131,7 @@ console.log(uploadReponse.status); // 201 Created
 
 - https://www.youtube.com/watch?v=hIAKzDz09tc
 
-- https://blog.devgenius.io/manage-azure-blob-storage-in-nestjs-daf5cb5125d4
+- https://blog.devgenius.io/manage-azure-storage-blob-in-nestjs-daf5cb5125d4
 
 - https://www.youtube.com/watch?v=Z9HeNZ8lmi4
 
@@ -153,7 +153,7 @@ console.log(uploadReponse.status); // 201 Created
 
 ```sh
 # to test locally
-yarn add link:./path/to/nestjs-blob-storage
+yarn add link:./path/to/nestjs-storage-blob
 ```
 
 ## Publish
@@ -167,5 +167,5 @@ npm run release
 
 ```sh
 # set environment variable at ".env.test"
-NEST_AZURE_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUNT_NAME>;AccountKey=<ACCOUNT_KEY>;EndpointSuffix=core.windows.net"
+NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUNT_NAME>;AccountKey=<ACCOUNT_KEY>;EndpointSuffix=core.windows.net"
 ```

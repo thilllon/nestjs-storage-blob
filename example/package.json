@@ -1,12 +1,14 @@
 {
   "name": "example",
+  "license": "MIT",
   "version": "0.0.1",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch"
+    "start:dev": "nest start --watch",
+    "dev": "yarn start:dev"
   },
   "prettier": {
     "singleQuote": true,
@@ -17,8 +19,10 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "axios": "^1.2.0",
     "dotenv": "^16.0.3",
-    "nestjs-blob-storage": "link:./..",
+    "form-data": "^4.0.0",
+    "nestjs-storage-blob": "link:./..",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"

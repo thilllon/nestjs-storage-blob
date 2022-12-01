@@ -13,14 +13,27 @@ import {
   ServiceGenerateAccountSasUrlOptions,
 } from '@azure/storage-blob';
 import { Inject, Injectable } from '@nestjs/common';
-import { BLOB_STORAGE_CLIENT } from './blob.constants';
+import { STORAGE_BLOB_CLIENT } from './storage-blob.constants';
+import {
+  GetAccountSasUrlResponse,
+  GetBlockBlobSasUrlResponse,
+  GetContainerSasUrlResponse,
+} from './storage-blob.interface';
 
+/**
+ * request headers
+ * https://learn.microsoft.com/rest/api/storageservices/put-blob#request-headers-all-blob-types
+ */
 @Injectable()
-export class BlobStorageService {
+export class StorageBlobService {
+  private containerName?: string;
+
   constructor(
-    @Inject(BLOB_STORAGE_CLIENT)
+    @Inject(STORAGE_BLOB_CLIENT)
     private readonly blobServiceClient: BlobServiceClient,
-  ) {}
+  ) {
+    this.containerName = process.env.NEST_STORAGE_BLOB_CONTAINER;
+  }
 
   getClient() {
     return this.blobServiceClient;
@@ -56,16 +69,21 @@ export class BlobStorageService {
     },
     options?: ServiceGenerateAccountSasUrlOptions,
   ) {
-    const __permissions = AccountSASPermissions.from(permissions);
+    const _permissions = AccountSASPermissions.from(permissions);
     const resourceTypes = this.convertToResourceTypes(resourceTypeMap);
     const accountSasUrl = this.blobServiceClient.generateAccountSasUrl(
       expiresOn,
-      __permissions,
+      _permissions,
       resourceTypes,
       options,
     );
 
-    return accountSasUrl;
+    const data: GetAccountSasUrlResponse = {
+      sasUrl: accountSasUrl,
+      headers: {},
+    };
+
+    return data;
   }
 
   async getContainerSasUrl(
@@ -75,15 +93,20 @@ export class BlobStorageService {
     },
     options: Omit<ContainerGenerateSasUrlOptions, 'permissions'> = {},
   ) {
-    const __permissions = ContainerSASPermissions.from(permissions);
-    const sasUrl = await this.blobServiceClient
+    const _permissions = ContainerSASPermissions.from(permissions);
+    const containerSasUrl = await this.blobServiceClient
       .getContainerClient(containerName)
       .generateSasUrl({
         ...options,
-        permissions: __permissions,
+        permissions: _permissions,
       });
 
-    return sasUrl;
+    const data: GetContainerSasUrlResponse = {
+      sasUrl: containerSasUrl,
+      headers: {},
+    };
+
+    return data;
   }
 
   async getBlockBlobSasUrl(
@@ -91,6 +114,7 @@ export class BlobStorageService {
     blobName: string,
     permissions: BlobSASPermissionsLike = {
       read: true,
+      create: true,
     },
     options: Omit<BlobGenerateSasUrlOptions, 'permissions'> = {},
   ) {
@@ -103,19 +127,23 @@ export class BlobStorageService {
     // https://stackoverflow.com/questions/26206993/how-to-revoke-shared-access-signature-in-azure-sdk
     // https://www.youtube.com/watch?v=lFFYcNbDvdo
 
-    const __permissions = BlobSASPermissions.from(permissions);
+    const _permissions = BlobSASPermissions.from(permissions);
     const sasUrl = await this.blobServiceClient
       .getContainerClient(containerName)
       .getBlockBlobClient(blobName)
       .generateSasUrl({
         ...options,
-        permissions: __permissions,
+        permissions: _permissions,
       });
 
-    return sasUrl;
+    const data: GetBlockBlobSasUrlResponse = {
+      sasUrl,
+      headers: { 'x-ms-blob-type': 'BlockBlob' },
+    };
+    return data;
   }
 
-  async listFiles(destination: string, containerName?: string) {
+  async listFiles(destination: string, containerName: string) {
     const container = this.blobServiceClient.getContainerClient(containerName);
     const files = container.listBlobsFlat({ prefix: destination });
     const paths: BlobItem[] = [];
@@ -145,6 +173,4 @@ export class BlobStorageService {
       .getBlockBlobClient(blob)
       .download();
   }
-
-  // --------------------------------
 }

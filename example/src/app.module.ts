@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BlobStorageModule } from 'nestjs-blob-storage';
+import { BlobStorageModule } from 'nestjs-storage-blob';
 import { AppController } from './app.controller';
 
 @Module({
@@ -7,7 +7,7 @@ import { AppController } from './app.controller';
     BlobStorageModule.forRootAsync({
       isGlobal: false,
       useFactory: () => ({
-        connection: process.env.NEST_AZURE_STORAGE_BLOB_CONNECTION,
+        connection: process.env.NEST_STORAGE_BLOB_CONNECTION,
       }),
     }),
   ],

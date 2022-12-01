@@ -1,1 +1,1 @@
-export * from './blob/index';
+export * from './storage-blob/index';

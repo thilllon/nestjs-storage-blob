@@ -1,29 +1,29 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 import { DynamicModule, Module, Provider, Scope } from '@nestjs/common';
 import {
-  BLOB_STORAGE_CLIENT,
-  BLOB_STORAGE_OPTIONS,
+  STORAGE_BLOB_CLIENT,
+  STORAGE_BLOB_OPTIONS,
   CONNECTION_VARIABLE,
-} from './blob.constants';
+} from './storage-blob.constants';
 import {
   ModuleAsyncOptions,
   ModuleOptions,
   OptionsFactory,
-} from './blob.interface';
-import { BlobStorageService } from './blob.service';
+} from './storage-blob.interface';
+import { StorageBlobService } from './storage-blob.service';
 
 @Module({
-  providers: [BlobStorageService],
-  exports: [BlobStorageService],
+  providers: [StorageBlobService],
+  exports: [StorageBlobService],
 })
 export class BlobStorageModule {
-  public static forRoot(options: ModuleOptions): DynamicModule {
+  static forRoot(options: ModuleOptions): DynamicModule {
     return {
       global: options.isGlobal || false,
       module: BlobStorageModule,
       providers: [
         {
-          provide: BLOB_STORAGE_CLIENT,
+          provide: STORAGE_BLOB_CLIENT,
           scope: options.scope || Scope.DEFAULT,
           useValue: this.instantiate(options),
         },
@@ -31,16 +31,16 @@ export class BlobStorageModule {
     };
   }
 
-  public static forRootAsync(options: ModuleAsyncOptions): DynamicModule {
+  static forRootAsync(options: ModuleAsyncOptions): DynamicModule {
     const provider: Provider = {
       useFactory: (options: ModuleOptions) => this.instantiate(options),
-      provide: BLOB_STORAGE_CLIENT,
+      provide: STORAGE_BLOB_CLIENT,
       scope: options.scope || Scope.DEFAULT,
-      inject: [BLOB_STORAGE_OPTIONS],
+      inject: [STORAGE_BLOB_OPTIONS],
     };
     return {
       global: options.isGlobal,
-      imports: options.imports || [],
+      imports: options.imports ?? [],
       module: BlobStorageModule,
       providers: [...this.createAsyncProviders(options), provider],
     };
@@ -51,8 +51,7 @@ export class BlobStorageModule {
   ): Provider[] {
     if (optionsAsync.useExisting || optionsAsync.useFactory) {
       return [this.createAsyncOptionsProvider(optionsAsync)];
-    }
-    if (optionsAsync.useClass) {
+    } else if (optionsAsync.useClass) {
       return [
         this.createAsyncOptionsProvider(optionsAsync),
         {
@@ -61,7 +60,8 @@ export class BlobStorageModule {
         },
       ];
     }
-    throw Error(
+
+    throw new Error(
       'One of useClass, useFactory or useExisting should be provided',
     );
   }
@@ -71,14 +71,14 @@ export class BlobStorageModule {
   ): Provider {
     if (options.useFactory) {
       return {
-        provide: BLOB_STORAGE_OPTIONS,
+        provide: STORAGE_BLOB_OPTIONS,
         useFactory: options.useFactory,
-        inject: options.inject || [],
+        inject: options.inject ?? [],
       };
     }
 
     const provider: Provider = {
-      provide: BLOB_STORAGE_OPTIONS,
+      provide: STORAGE_BLOB_OPTIONS,
       useFactory: async (optionsFactory: OptionsFactory) =>
         await optionsFactory.createOptions(),
     };
