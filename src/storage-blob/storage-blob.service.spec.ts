@@ -1,9 +1,12 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 import { Test } from '@nestjs/testing';
+import axios from 'axios';
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as path from 'path';
 import {
-  STORAGE_BLOB_CLIENT,
   CONNECTION_VARIABLE,
+  STORAGE_BLOB_CLIENT,
 } from './storage-blob.constants';
 import { StorageBlobService } from './storage-blob.service';
 
@@ -33,13 +36,50 @@ describe('StorageBlobService', () => {
   });
 
   it('should return', async () => {
-    const { sasUrl } = service.getAccountSasUrl();
+    const { sasUrl, headers } = await service.getAccountSasUrl();
     expect(typeof sasUrl).toBe('string');
+    expect(sasUrl.startsWith('https://')).toBe(true);
+    expect(headers).toBeTruthy();
+  });
+
+  it('should return', async () => {
+    const { sasUrl, headers } = await service.getContainerSasUrl(
+      'test',
+      { add: true },
+      { expiresOn: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7) },
+    );
     expect(typeof sasUrl).toBe('string');
+    expect(sasUrl.startsWith('https://')).toBe(true);
+    expect(headers).toBeTruthy();
+  });
+
+  it('should return', async () => {
+    const { sasUrl, headers } = await service.getBlockBlobSasUrl(
+      'mycontainer',
+      'myfile.txt',
+      { add: true, create: true },
+    );
     expect(typeof sasUrl).toBe('string');
-    expect(typeof sasUrl).toBe('string');
-    expect(typeof sasUrl).toBe('string');
-    expect(typeof sasUrl).toBe('string');
-    expect(typeof sasUrl).toBe('string');
+    expect(sasUrl.startsWith('https://')).toBe(true);
+    expect(headers).toBeTruthy();
+  });
+
+  it('should be valid url', async () => {
+    const fileName = 'image.jpg';
+    const containerName = process.env.NEST_STORAGE_BLOB_CONTAINER;
+
+    const { sasUrl, headers } = await service.getBlockBlobSasUrl(
+      containerName,
+      fileName,
+      { add: true, create: true },
+      { expiresOn: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7) },
+    );
+
+    const buffer = fs.readFileSync(
+      path.join(process.cwd(), '__test__', 'fixture', fileName),
+    );
+    const { data, status } = await axios.put(sasUrl, buffer, { headers });
+    expect(status).toBe(201);
+    expect(data).toBeTruthy();
   });
 });

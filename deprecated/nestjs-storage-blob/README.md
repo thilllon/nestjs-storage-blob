@@ -1,1 +1,0 @@
-# (deprecated) nestjs-storage-blob
