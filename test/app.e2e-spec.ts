@@ -25,7 +25,7 @@ describe('AppController (e2e)', () => {
       .expect((res) => {
         console.log(res.body);
         const data = res.body;
-        console.log(data);
+        // console.log(data);
         return true;
       });
   });

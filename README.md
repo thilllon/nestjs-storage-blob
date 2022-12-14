@@ -15,12 +15,20 @@ Azure Blob Storage module for Nest.js
 
 ## Setup
 
-```sh
-yarn add nestjs-storage-blob @azure/storage-blob
-```
+- Install packages
 
 ```sh
-# Environment variables
+npm install nestjs-storage-blob @azure/storage-blob
+# or
+yarn add nestjs-storage-blob @azure/storage-blob
+# or
+pnpm install nestjs-storage-blob @azure/storage-blob
+```
+
+- Set environment variables
+
+```sh
+# .env
 
 # required
 NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUNT_NAME>;AccountKey=<ACCOUNT_KEY>;EndpointSuffix=core.windows.net"
@@ -29,7 +37,7 @@ NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUN
 NEST_STORAGE_BLOB_CONTAINER="<CONTAINER_NAME>"
 ```
 
-### Options #1
+### Option #1
 
 ```ts
 // app.module.ts
@@ -203,12 +211,14 @@ const onChange: ChangeEventHandler = async (ev) => {
 ```sh
 # to test locally
 yarn add link:./path/to/nestjs-storage-blob
+# or
+pnpm add link:./path/to/nestjs-storage-blob
 ```
 
 ## Publish
 
 ```sh
-# DO NOT USE YARN: 2FA error occurs when using yarn
+# DO NOT USE YARN: 2FA error occurs when using yarn on Windows machine
 npm run release
 ```
 

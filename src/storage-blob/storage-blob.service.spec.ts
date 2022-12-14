@@ -35,14 +35,14 @@ describe('StorageBlobService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return', async () => {
+  it('should check account SAS URL', async () => {
     const { sasUrl, headers } = await service.getAccountSasUrl();
     expect(typeof sasUrl).toBe('string');
     expect(sasUrl.startsWith('https://')).toBe(true);
     expect(headers).toBeTruthy();
   });
 
-  it('should return', async () => {
+  it('should check container SAS URL ', async () => {
     const { sasUrl, headers } = await service.getContainerSasUrl(
       'test',
       { add: true },
@@ -53,7 +53,7 @@ describe('StorageBlobService', () => {
     expect(headers).toBeTruthy();
   });
 
-  it('should return', async () => {
+  it('should check block BLOB SAS URL', async () => {
     const { sasUrl, headers } = await service.getBlockBlobSasUrl(
       'mycontainer',
       'myfile.txt',
@@ -64,7 +64,7 @@ describe('StorageBlobService', () => {
     expect(headers).toBeTruthy();
   });
 
-  it('should be valid url', async () => {
+  it('should be valid URL', async () => {
     const fileName = 'image.jpg';
     const containerName = process.env.NEST_STORAGE_BLOB_CONTAINER;
 
