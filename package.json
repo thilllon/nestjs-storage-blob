@@ -42,11 +42,11 @@
     "format": "prettier -w -l .",
     "lint": "eslint src --fix",
     "test": "jest",
-    "prerelease": "yarn build",
+    "prerelease": "pnpm build",
     "release": "release-it",
     "commit": "cz",
     "prepare": "husky install",
-    "ez": "git add . && yarn cz"
+    "ez": "git add . && pnpm cz"
   },
   "lint-staged": {
     "*.{js,ts}": [

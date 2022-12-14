@@ -8,7 +8,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "dev": "yarn start:dev",
+    "dev": "pnpm start:dev",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test": "jest --useStderr --coverage --config ./test/jest-e2e.json"
   },
