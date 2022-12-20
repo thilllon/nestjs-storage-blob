@@ -210,16 +210,13 @@ const onChange: ChangeEventHandler = async (ev) => {
 
 ```sh
 # to test locally
-yarn add link:./path/to/nestjs-storage-blob
-# or
 pnpm add link:./path/to/nestjs-storage-blob
 ```
 
 ## Publish
 
 ```sh
-# DO NOT USE YARN: 2FA error occurs when using yarn on Windows machine
-npm run release
+pnpm release
 ```
 
 ## Test
