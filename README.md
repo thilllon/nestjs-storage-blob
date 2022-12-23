@@ -216,6 +216,7 @@ pnpm add link:./path/to/nestjs-storage-blob
 ## Publish
 
 ```sh
+# 2FA error occurs when using yarn on Windows machine
 pnpm release
 ```
 
