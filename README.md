@@ -37,19 +37,19 @@ NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUN
 NEST_STORAGE_BLOB_CONTAINER="<CONTAINER_NAME>"
 ```
 
-### Option #1
+### Option 1
 
 ```ts
 // app.module.ts
 
 import { Module } from '@nestjs/common';
-import { BlobStorageModule } from 'nestjs-storage-blob';
+import { StorageBlobModule } from 'nestjs-storage-blob';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
-    BlobStorageModule.forRoot({
+    StorageBlobModule.forRoot({
       connection: process.env.NEST_STORAGE_BLOB_CONNECTION,
       isGlobal: true, // optional
     }),
@@ -60,19 +60,19 @@ import { AppService } from './app.service';
 export class AppModule {}
 ```
 
-### Option #2
+### Option 2
 
 ```ts
 // app.module.ts
 
 import { Module } from '@nestjs/common';
-import { BlobStorageModule } from 'nestjs-storage-blob';
+import { StorageBlobModule } from 'nestjs-storage-blob';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
-    BlobStorageModule.forRootAsync({
+    StorageBlobModule.forRootAsync({
       useFactory: () => ({
         connection: process.env.NEST_STORAGE_BLOB_CONNECTION,
       }),

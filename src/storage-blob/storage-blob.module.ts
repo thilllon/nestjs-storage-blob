@@ -16,11 +16,11 @@ import { StorageBlobService } from './storage-blob.service';
   providers: [StorageBlobService],
   exports: [StorageBlobService],
 })
-export class BlobStorageModule {
+export class StorageBlobModule {
   static forRoot(options: ModuleOptions): DynamicModule {
     return {
       global: options.isGlobal || false,
-      module: BlobStorageModule,
+      module: StorageBlobModule,
       providers: [
         {
           provide: STORAGE_BLOB_CLIENT,
@@ -41,7 +41,7 @@ export class BlobStorageModule {
     return {
       global: options.isGlobal,
       imports: options.imports ?? [],
-      module: BlobStorageModule,
+      module: StorageBlobModule,
       providers: [...this.createAsyncProviders(options), provider],
     };
   }

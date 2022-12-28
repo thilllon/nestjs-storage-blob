@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { BlobStorageModule } from 'nestjs-storage-blob';
+import { StorageBlobModule } from 'nestjs-storage-blob';
 import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    BlobStorageModule.forRootAsync({
+    StorageBlobModule.forRootAsync({
       useFactory: () => ({
         connection: process.env.NEST_STORAGE_BLOB_CONNECTION,
       }),
