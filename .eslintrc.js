@@ -18,4 +18,5 @@ module.exports = {
     'object-shorthand': 'error',
     '@typescript-eslint/no-explicit-any': 'warn',
   },
+  ignorePatterns: ['node_modules', 'dist', 'example/**', '**/*.d.ts'],
 };

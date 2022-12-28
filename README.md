@@ -116,7 +116,7 @@ export class AppController {
 ```
 
 ```ts
-// Server-side example
+// Example 1. Upload file from server-side
 
 // Get Blob SAS URL which will be endpoint of uploading file
 const res = await axios.get('https://<YOUR_SERVER>/block-blob-sas');
@@ -145,10 +145,9 @@ if (buffer) {
 ```
 
 ```ts
-// Browser-side example
-// Assume that we are using file uploader
+// Example 2. Upload file from browser-side
 
-const onChange: ChangeEventHandler = async (ev) => {
+const onChange: ChangeEventHandler<HTMLInputElement> = async (ev) => {
   const file = ev.file;
 
   // Get Blob SAS URL which will be endpoint of uploading file

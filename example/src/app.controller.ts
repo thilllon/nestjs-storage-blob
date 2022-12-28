@@ -31,27 +31,42 @@ export class AppController {
       { expiresOn },
     );
 
-    const buffer = fs.readFileSync(path.join(process.cwd(), fileName));
-
-    if (buffer) {
-      await axios
-        .put(blobSas.sasUrl, buffer, {
-          headers: {
-            ...blobSas.headers,
-          },
-        })
-        .then((res) => {
-          console.log(res.status);
-        })
-        .catch((err: any) => {
-          console.error(err.message);
-        });
-    }
-
     return {
       accountSas,
       containerSas,
       blobSas,
     };
+  }
+
+  @Get('/upload')
+  async upload(
+    @Query('containerName')
+    containerName = process.env.NEST_STORAGE_BLOB_CONTAINER,
+    @Query('fileName') fileName = 'image.jpg',
+  ) {
+    const expiresOn = new Date(Date.now() + 3600 * 1000);
+
+    const blobSas = await this.storageBlobService.getBlockBlobSasUrl(
+      containerName,
+      fileName,
+      { add: true, create: true, read: true, delete: true, write: true },
+      { expiresOn },
+    );
+
+    const buffer = fs.readFileSync(path.join(process.cwd(), 'res', fileName));
+
+    if (buffer) {
+      try {
+        const response = await axios.put(blobSas.sasUrl, buffer, {
+          headers: {
+            ...blobSas.headers,
+          },
+        });
+
+        return { blobSas, status: response.status };
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
   }
 }
