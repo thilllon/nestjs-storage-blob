@@ -19,17 +19,11 @@ Azure Blob Storage module for Nest.js
 
 ```sh
 npm install nestjs-storage-blob @azure/storage-blob
-# or
-yarn add nestjs-storage-blob @azure/storage-blob
-# or
-pnpm install nestjs-storage-blob @azure/storage-blob
 ```
 
-- Set environment variables
+- Set environment variables(`.env`)
 
 ```sh
-# .env
-
 # required
 NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUNT_NAME>;AccountKey=<ACCOUNT_KEY>;EndpointSuffix=core.windows.net"
 
@@ -178,31 +172,6 @@ const onChange: ChangeEventHandler = async (ev) => {
     });
 };
 ```
-
-# Roadmap
-
-- [ ] add test code
-- [ ] add other authentication method [link](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/storage/storage-blob/samples/v12/typescript)
-
-# Reference
-
-- https://www.youtube.com/watch?v=hIAKzDz09tc
-
-- https://blog.devgenius.io/manage-azure-storage-blob-in-nestjs-daf5cb5125d4
-
-- https://www.youtube.com/watch?v=Z9HeNZ8lmi4
-
-- https://github.com/Azure-Samples/functions-dotnet-sas-token/blob/master/README.md
-
-- https://docs.microsoft.com/ko-kr/azure/storage/blobs/quickstart-blobs-javascript-browser
-
-- https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview
-
-- https://dmrelease.blob.core.windows.net/azurestoragejssample/samples/sample-blob.html
-
-- https://github.com/Azure-Samples/functions-node-sas-token/blob/master/GetSasToken-Node/index.js#L18
-
-- https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/storage/storage-blob/samples/v12/typescript
 
 # Contribution
 
