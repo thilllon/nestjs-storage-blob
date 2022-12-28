@@ -1,11 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import axios from 'axios';
-import * as FormData from 'form-data';
 import * as fs from 'fs';
 import { StorageBlobService } from 'nestjs-storage-blob';
 import * as path from 'path';
-
-// https://gist.github.com/binki/10ac3e91851b524546f8279733cdadad
 
 @Controller()
 export class AppController {
@@ -13,14 +10,14 @@ export class AppController {
 
   @Get('/')
   async getSas(
-    @Query('containerName') containerName?: string,
-    @Query('fileName') fileName?: string,
+    @Query('containerName')
+    containerName = process.env.NEST_STORAGE_BLOB_CONTAINER,
+    @Query('fileName') fileName = 'image.jpg',
   ) {
-    containerName = containerName || process.env.NEST_STORAGE_BLOB_CONTAINER;
-    fileName = fileName || 'sample2.jpg';
+    const expiresOn = new Date(Date.now() + 3600 * 1000);
 
-    const expiresOn = new Date(new Date().getTime() + 3600 * 1000);
     const accountSas = await this.storageBlobService.getAccountSasUrl();
+
     const containerSas = await this.storageBlobService.getContainerSasUrl(
       containerName,
       { add: true, read: true },

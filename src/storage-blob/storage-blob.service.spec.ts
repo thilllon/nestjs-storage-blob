@@ -82,4 +82,10 @@ describe('StorageBlobService', () => {
     expect(status).toBe(201);
     expect(data).toBeTruthy();
   });
+
+  // TODO: complete test case
+  // it('should upload files', () => {
+  //   // https://gist.github.com/binki/10ac3e91851b524546f8279733cdadad
+  //   expect(true).toBe(true);
+  // });
 });
