@@ -39,7 +39,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "husky install && chmod ug+x .husky/*",
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prebuild": "rm -rf dist",
+    "build": "tsc -p tsconfig.build.json",
     "format": "prettier -w -l .",
     "lint": "eslint src --fix",
     "test": "jest",
