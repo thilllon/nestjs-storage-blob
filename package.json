@@ -38,6 +38,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "prepare": "husky install && chmod ug+x .husky/*",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "format": "prettier -w -l .",
     "lint": "eslint src --fix",
@@ -45,7 +46,6 @@
     "prerelease": "pnpm build",
     "release": "release-it",
     "commit": "cz",
-    "prepare": "husky install",
     "ez": "git add . && pnpm cz"
   },
   "lint-staged": {
