@@ -8,6 +8,10 @@
     "start": "next start -p 3001",
     "lint": "next lint"
   },
+  "eslintConfig": {
+    "root": true,
+    "extends": "next/core-web-vitals"
+  },
   "dependencies": {
     "axios": "1.2.1",
     "next": "13.1.1",
