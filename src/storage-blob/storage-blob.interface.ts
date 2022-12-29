@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StoragePipelineOptions } from '@azure/storage-blob';
 import { ModuleMetadata, Scope, Type } from '@nestjs/common';
 
@@ -21,8 +20,10 @@ export type ModuleAsyncOptions = Pick<ModuleMetadata, 'imports'> & {
   useExisting?: Type<OptionsFactory>;
   useClass?: Type<OptionsFactory>;
   useFactory?: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...args: any[]
   ) => Promise<PartialModuleOptions> | PartialModuleOptions;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   inject?: any[];
   scope?: Scope;
 };
