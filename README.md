@@ -85,11 +85,11 @@ export class AppModule {}
 // app.controller.ts
 
 import { Controller, Get } from '@nestjs/common';
-import { BlobStorageService } from 'nestjs-storage-blob';
+import { StorageBlobService } from 'nestjs-storage-blob';
 
 @Controller()
 export class AppController {
-  constructor(private readonly blobService: BlobStorageService) {}
+  constructor(private readonly storageBlobService: StorageBlobService) {}
 
   @Get('/')
   async getSas() {
@@ -97,13 +97,13 @@ export class AppController {
     const fileName = 'test.txt';
     const expiresOn = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
 
-    const accountSasUrl = await this.blobService.getAccountSasUrl();
+    const accountSasUrl = await this.storageBlobService.getAccountSasUrl();
 
-    const containerSasUrl = await this.blobService.getContainerSasUrl(
+    const containerSasUrl = await this.storageBlobService.getContainerSasUrl(
       containerName,
     );
 
-    const blobSasUrl = await this.blobService.getBlockBlobSasUrl(
+    const blobSasUrl = await this.storageBlobService.getBlockBlobSasUrl(
       containerName,
       fileName,
       { add: true, create: true, read: true, delete: true },
