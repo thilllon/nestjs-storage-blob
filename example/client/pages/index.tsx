@@ -11,10 +11,19 @@ export default function HomePage() {
       return;
     }
 
+    const containerName = process.env.NEXT_PUBLIC_CONTAINER_NAME;
+
+    if (!containerName) {
+      throw new Error('Container name is not defined');
+    }
+
     try {
       // Get Blob SAS URL which will be endpoint of uploading file
       const res = await axios.get('http://localhost:3000', {
-        params: { containerName: 'provedwork', fileName: attachment.name },
+        params: {
+          containerName,
+          fileName: attachment.name,
+        },
       });
       const blobSasUrl = res.data.blobSas.sasUrl;
       const { status } = await axios.put(blobSasUrl, attachment, {
