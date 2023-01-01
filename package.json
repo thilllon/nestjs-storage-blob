@@ -1,6 +1,6 @@
 {
   "name": "nestjs-storage-blob",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Azure Blob Storage module for Nest.js",
   "author": "thilllon",
   "license": "MIT",
