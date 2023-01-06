@@ -53,7 +53,9 @@ export class AppController {
       { expiresOn },
     );
 
-    const buffer = fs.readFileSync(path.join(process.cwd(), 'res', fileName));
+    const buffer = fs.readFileSync(
+      path.join(process.cwd(), 'assets', fileName),
+    );
 
     if (buffer) {
       try {
