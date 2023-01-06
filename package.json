@@ -47,7 +47,7 @@
     "build": "tsup",
     "build:tsc": "tsc",
     "format": "prettier --write --list-different .",
-    "lint": "eslint --fix .",
+    "lint": "eslint . --fix",
     "test": "jest",
     "prerelease": "pnpm build",
     "release": "pnpm format && pnpm lint && pnpm test && pnpm build && release-it",
