@@ -2,7 +2,11 @@
   "name": "nestjs-storage-blob",
   "version": "2.0.3",
   "description": "Azure Blob Storage module for Nest.js",
-  "author": "thilllon",
+  "author": {
+    "email": "thilllon970@gmail.com",
+    "name": "thilllon",
+    "url": "https://github.com/thilllon"
+  },
   "license": "MIT",
   "packageManager": "pnpm@7.22.0",
   "repository": {
