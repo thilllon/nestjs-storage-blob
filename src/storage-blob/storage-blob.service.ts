@@ -156,10 +156,7 @@ export class StorageBlobService {
   }
 
   async deleteFile(container: string, blob: string) {
-    return this.blobServiceClient
-      .getContainerClient(container)
-      .getBlockBlobClient(blob)
-      .delete();
+    return this.blobServiceClient.getContainerClient(container).getBlockBlobClient(blob).delete();
   }
 
   async deleteFileIfExists(container: string, blob: string) {
@@ -170,9 +167,6 @@ export class StorageBlobService {
   }
 
   async downloadStream(container: string, blob: string) {
-    return this.blobServiceClient
-      .getContainerClient(container)
-      .getBlockBlobClient(blob)
-      .download();
+    return this.blobServiceClient.getContainerClient(container).getBlockBlobClient(blob).download();
   }
 }

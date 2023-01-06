@@ -99,9 +99,7 @@ export class AppController {
 
     const accountSasUrl = await this.storageBlobService.getAccountSasUrl();
 
-    const containerSasUrl = await this.storageBlobService.getContainerSasUrl(
-      containerName,
-    );
+    const containerSasUrl = await this.storageBlobService.getContainerSasUrl(containerName);
 
     const blobSasUrl = await this.storageBlobService.getBlockBlobSasUrl(
       containerName,
@@ -195,3 +193,5 @@ pnpm release
 NEST_STORAGE_BLOB_CONNECTION="DefaultEndpointsProtocol=https;AccountName=<ACCOUNT_NAME>;AccountKey=<ACCOUNT_KEY>;EndpointSuffix=core.windows.net"
 NEST_STORAGE_BLOB_CONTAINER="<CONTAINER_NAME>"
 ```
+
+# nestjs-storage-blob

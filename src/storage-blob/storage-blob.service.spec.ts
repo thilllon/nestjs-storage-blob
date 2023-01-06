@@ -4,10 +4,7 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
-import {
-  CONNECTION_VARIABLE,
-  STORAGE_BLOB_CLIENT,
-} from './storage-blob.constants';
+import { CONNECTION_VARIABLE, STORAGE_BLOB_CLIENT } from './storage-blob.constants';
 import { StorageBlobService } from './storage-blob.service';
 
 dotenv.config({ path: '.env.test' });
@@ -21,9 +18,7 @@ describe('StorageBlobService', () => {
         StorageBlobService,
         {
           provide: STORAGE_BLOB_CLIENT,
-          useValue: BlobServiceClient.fromConnectionString(
-            process.env[CONNECTION_VARIABLE],
-          ),
+          useValue: BlobServiceClient.fromConnectionString(process.env[CONNECTION_VARIABLE]),
         },
       ],
     }).compile();
@@ -54,11 +49,10 @@ describe('StorageBlobService', () => {
   });
 
   it('should check block BLOB SAS URL', async () => {
-    const { sasUrl, headers } = await service.getBlockBlobSasUrl(
-      'mycontainer',
-      'myfile.txt',
-      { add: true, create: true },
-    );
+    const { sasUrl, headers } = await service.getBlockBlobSasUrl('mycontainer', 'myfile.txt', {
+      add: true,
+      create: true,
+    });
     expect(typeof sasUrl).toBe('string');
     expect(sasUrl.startsWith('https://')).toBe(true);
     expect(headers).toBeTruthy();
@@ -75,9 +69,7 @@ describe('StorageBlobService', () => {
       { expiresOn: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7) },
     );
 
-    const buffer = fs.readFileSync(
-      path.join(process.cwd(), '__test__', 'fixture', fileName),
-    );
+    const buffer = fs.readFileSync(path.join(process.cwd(), '__test__', 'fixture', fileName));
     const { data, status } = await axios.put(sasUrl, buffer, { headers });
     expect(status).toBe(201);
     expect(data).toBeTruthy();

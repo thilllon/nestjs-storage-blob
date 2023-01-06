@@ -5,11 +5,7 @@ import {
   STORAGE_BLOB_OPTIONS,
   CONNECTION_VARIABLE,
 } from './storage-blob.constants';
-import {
-  ModuleAsyncOptions,
-  ModuleOptions,
-  OptionsFactory,
-} from './storage-blob.interface';
+import { ModuleAsyncOptions, ModuleOptions, OptionsFactory } from './storage-blob.interface';
 import { StorageBlobService } from './storage-blob.service';
 
 @Module({
@@ -46,9 +42,7 @@ export class StorageBlobModule {
     };
   }
 
-  private static createAsyncProviders(
-    optionsAsync: ModuleAsyncOptions,
-  ): Provider[] {
+  private static createAsyncProviders(optionsAsync: ModuleAsyncOptions): Provider[] {
     if (optionsAsync.useExisting || optionsAsync.useFactory) {
       return [this.createAsyncOptionsProvider(optionsAsync)];
     } else if (optionsAsync.useClass) {
@@ -61,14 +55,10 @@ export class StorageBlobModule {
       ];
     }
 
-    throw new Error(
-      'One of useClass, useFactory or useExisting should be provided',
-    );
+    throw new Error('One of useClass, useFactory or useExisting should be provided');
   }
 
-  private static createAsyncOptionsProvider(
-    options: ModuleAsyncOptions,
-  ): Provider {
+  private static createAsyncOptionsProvider(options: ModuleAsyncOptions): Provider {
     if (options.useFactory) {
       return {
         provide: STORAGE_BLOB_OPTIONS,
@@ -79,8 +69,7 @@ export class StorageBlobModule {
 
     const provider: Provider = {
       provide: STORAGE_BLOB_OPTIONS,
-      useFactory: async (optionsFactory: OptionsFactory) =>
-        await optionsFactory.createOptions(),
+      useFactory: async (optionsFactory: OptionsFactory) => await optionsFactory.createOptions(),
     };
     if (options.useExisting) {
       provider.inject = [options.useExisting];
@@ -93,14 +82,9 @@ export class StorageBlobModule {
 
   private static instantiate(options: ModuleOptions): BlobServiceClient {
     if (!options.connection) {
-      throw new Error(
-        `Environment variable is required: "${CONNECTION_VARIABLE}"`,
-      );
+      throw new Error(`Environment variable is required: "${CONNECTION_VARIABLE}"`);
     }
 
-    return BlobServiceClient.fromConnectionString(
-      options.connection,
-      options.storageOptions,
-    );
+    return BlobServiceClient.fromConnectionString(options.connection, options.storageOptions);
   }
 }
